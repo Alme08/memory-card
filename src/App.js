@@ -4,8 +4,9 @@ import Card from './components/card';
 function App() {
   const [data, setData] = useState([]);
   const [loading, setLoading] = useState(true);
-  // const [score, setScore] = useState(0);
-  // const [bestScore, setBestScore] = useState(0);
+  const [score, setScore] = useState(0);
+  const [bestScore, setBestScore] = useState(0);
+  const [clickedCards, setClickedCards] = useState([]);
 
   const fetchData = async () => {
     try {
@@ -31,6 +32,20 @@ function App() {
     fetchData();
   }, []);
 
+  const handleCardClick = (cardId) => {
+    // If the card has already been clicked, reset the current score and the clicked card array
+    if (clickedCards.includes(cardId)) {
+      setScore(0);
+      setClickedCards([]);
+    } else {
+      const newScore = score + 1;
+      setScore(newScore);
+      setClickedCards([...clickedCards, cardId]);
+
+      if (newScore > bestScore) setBestScore(newScore);
+    }
+  };
+
   if (loading) {
     return (
       <h1>Loading...</h1>
@@ -38,11 +53,23 @@ function App() {
   }
 
   return (
-    <div>
-      {
-        data.map((pok) => <Card key={pok.id} pok={pok} />)
+    <>
+      <p>
+        Score:
+        {' '}
+        {score}
+      </p>
+      <p>
+        Best score:
+        {' '}
+        {bestScore}
+      </p>
+      <div>
+        {
+        data.map((pok) => <Card key={pok.id} pok={pok} handleCardClick={handleCardClick} />)
       }
-    </div>
+      </div>
+    </>
   );
 }
 
