@@ -32,6 +32,15 @@ function App() {
     fetchData();
   }, []);
 
+  const randomArray = () => {
+    const randomData = [...data];
+    for (let i = randomData.length - 1; i > 0; i -= 1) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [randomData[i], randomData[j]] = [randomData[j], randomData[i]];
+    }
+    setData(randomData);
+  };
+
   const handleCardClick = (cardId) => {
     // If the card has already been clicked, reset the current score and the clicked card array
     if (clickedCards.includes(cardId)) {
@@ -44,6 +53,7 @@ function App() {
 
       if (newScore > bestScore) setBestScore(newScore);
     }
+    randomArray();
   };
 
   if (loading) {
